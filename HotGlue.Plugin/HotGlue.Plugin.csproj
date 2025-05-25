@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\FlatRedBall\FRBDK\Glue\Glue\Glue.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="echo Copying to &quot;$(SolutionDir)..\FlatRedBall\FRBDK\Glue\Glue\bin\Debug\Plugins\$(TargetName)\&quot;&#xD;&#xA;IF NOT EXIST &quot;$(SolutionDir)..\FlatRedBall\FRBDK\Glue\Glue\bin\Debug\Plugins\$(TargetName)&quot; md &quot;$(SolutionDir)..\FlatRedBall\FRBDK\Glue\Glue\bin\Debug\Plugins\$(TargetName)\&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)..\FlatRedBall\FRBDK\Glue\Glue\bin\Debug\Plugins\$(TargetName)&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)..\FlatRedBall\FRBDK\Glue\Glue\bin\Debug\Plugins\$(TargetName)&quot;" />
+	</Target>
+
+</Project>

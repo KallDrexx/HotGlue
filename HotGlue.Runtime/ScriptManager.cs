@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CSScripting;
@@ -25,6 +26,7 @@ public class ScriptManager
 
     public void AddScriptFile(string file)
     {
+        var fileInfo = new FileInfo(file);
         dynamic script;
         try
         {
@@ -36,25 +38,28 @@ public class ScriptManager
         }
         catch (Exception exception)
         {
-            Console.WriteLine($"Error: Failed to read script file '{file}': {exception}");
+            Debug.WriteLine($"Error: Failed to read script file '{fileInfo.FullName}': {exception}");
             return;
         }
 
-        if (_scripts.Remove(file, out var prevScript))
+
+        if (_scripts.Remove(fileInfo.FullName, out var prevScript))
         {
-            Console.WriteLine($"Unloading script '{file}'");
+            Debug.WriteLine($"Unloading script '{fileInfo.FullName}'");
             prevScript.Dispose();
         }
 
-        Console.WriteLine($"Loaded script '{file}'");
-        _scripts.Add(file, new ScriptInfo(file, script));
+        Debug.WriteLine($"Loaded script '{fileInfo.FullName}'");
+        _scripts.Add(fileInfo.FullName, new ScriptInfo(file, script));
     }
 
     public void Invoke(string file, string methodName, params object[] parameters)
     {
-        if (!_scripts.TryGetValue(file, out var script))
+        var fileInfo = new FileInfo(file);
+
+        if (!_scripts.TryGetValue(fileInfo.FullName, out var script))
         {
-            Console.WriteLine($"Error: No script '{file}' loaded");
+            Debug.WriteLine($"Error: No script '{fileInfo.FullName}' loaded");
             return;
         }
 
